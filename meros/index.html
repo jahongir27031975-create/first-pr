@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="uz-Cyrl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мерос анкета</title>
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--ink:#1d2430;--muted:#5d6675;--line:#dcdfe4;--acc:#1f5f8b;--acc2:#e8f1f8;--ok:#1d7a46;--warn:#9a5b00;--warnbg:#fff6e5;--bad:#a32b2b;--badbg:#fdeeee}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181d;--card:#1e232a;--ink:#e6e9ee;--muted:#9aa3b1;--line:#333a44;--acc:#6fb0e0;--acc2:#1f2f3d;--ok:#5cc58a;--warn:#f0b24a;--warnbg:#2e2614;--bad:#f08080;--badbg:#331b1b}}
+:root[data-theme="dark"]{--bg:#15181d;--card:#1e232a;--ink:#e6e9ee;--muted:#9aa3b1;--line:#333a44;--acc:#6fb0e0;--acc2:#1f2f3d;--ok:#5cc58a;--warn:#f0b24a;--warnbg:#2e2614;--bad:#f08080;--badbg:#331b1b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header{padding:20px 16px 8px;max-width:1280px;margin:0 auto}
+h1{font-size:22px;margin:0 0 4px}
+header p{margin:0;color:var(--muted);font-size:13.5px}
+.wrap{max-width:1280px;margin:0 auto;padding:8px 16px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr)}}
+.toolbar select{max-width:100%}
+@media (max-width:520px){.person .top{grid-template-columns:minmax(0,1fr) auto}.person .top>div:nth-child(2){grid-column:1/-1;grid-row:2}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.card h2{font-size:16px;margin:0 0 2px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.card h2 .art{font-weight:400;font-size:12.5px;color:var(--muted)}
+.hint{color:var(--muted);font-size:12.5px;margin:2px 0 10px}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:3px}
+input[type=text],input[type=number],input[type=date],select{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink);font:inherit}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:8px}
+.person{border:1px solid var(--line);border-radius:8px;padding:10px;margin:8px 0;background:color-mix(in srgb,var(--card) 94%,var(--acc))}
+.person.dead{border-style:dashed}
+.person .top{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto;gap:8px;align-items:end}
+.flags{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px}
+.flags label{display:flex;gap:5px;align-items:center;color:var(--ink);font-size:13px;margin:0;cursor:pointer}
+.kids{margin:8px 0 0 14px;padding-left:10px;border-left:2px solid var(--line)}
+.kids .ttl{font-size:12.5px;color:var(--muted)}
+button{font:inherit;cursor:pointer;border-radius:7px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 11px}
+button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.pri{color:#0d1720}}
+button.add{border-style:dashed;color:var(--acc);font-size:13.5px}
+button.x{padding:6px 9px;color:var(--bad)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.result{position:sticky;top:10px}
+@media (max-width:900px){.result{position:static}}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:600}
+td.num{white-space:nowrap;font-variant-numeric:tabular-nums}
+.frac{font-weight:700;color:var(--acc);font-size:15px}
+.tag{display:inline-block;font-size:11.5px;padding:1px 6px;border-radius:5px;background:var(--acc2);color:var(--acc);margin:1px 3px 1px 0}
+.tag.ob{background:var(--warnbg);color:var(--warn)}
+.basis{color:var(--muted);font-size:12.5px}
+.note{background:var(--warnbg);color:var(--ink);border-left:3px solid var(--warn);padding:7px 10px;border-radius:5px;margin:6px 0;font-size:13px}
+.note.bad{background:var(--badbg);border-color:var(--bad)}
+.excl li{margin:4px 0;font-size:13px}
+.excl b{font-weight:600}
+.summary{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+.stat{flex:1 1 130px;border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.stat .v{font-size:18px;font-weight:700}
+.stat .k{font-size:12px;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+details summary{cursor:pointer;color:var(--acc);font-size:13.5px}
+.laws li{font-size:12.5px;margin:3px 0}
+.disclaimer{font-size:12px;color:var(--muted);margin-top:10px}
+@media print{
+  body{background:#fff;color:#000} .form,.toolbar,header p{display:none} .wrap{display:block} .card{border:none;padding:0} .result{position:static}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Мерос анкета — меросхўрлар таркиби ва улушларини аниқлаш</h1>
+  <p>Ўзбекистон Республикаси Фуқаролик кодекси, V бўлим «Мерос ҳуқуқи» (1112–1157-моддалар) асосида. Маълумотлар фақат шу браузерда қолади.</p>
+</header>
+<div class="wrap">
+  <div class="form" id="form"></div>
+  <div class="result" id="result"></div>
+</div>
+<script src="engine.js"></script>
+<script>
+'use strict';
+const M = window.Meros;
+let seq = 0;
+const uid = () => 'p' + Date.now().toString(36) + (++seq);
+const person = (o = {}) => ({ id: uid(), name: '', status: 'alive', kids: [], ...o });
+
+function blank() {
+  return {
+    deceased: { name: '', date: '', place: '' },
+    estate: { personal: '', joint: '' },
+    spouse: person({ present: false, registered: true }),
+    parents: [person({ role: 'father', present: true }), person({ role: 'mother', present: true })],
+    children: [], siblings: [], grandparents: [], uncles: [], others: [], dependents: [],
+    will: { exists: false, entries: [] },
+  };
+}
+
+const SAMPLES = {
+  'Намуна 1: қонун бўйича, тақдим этиш ҳуқуқи': () => {
+    const s = blank();
+    Object.assign(s.deceased, { name: 'Каримов Рустам Аҳмадович', date: '2026-03-15', place: 'Тошкент ш., Юнусобод тумани' });
+    Object.assign(s.estate, { personal: 120000000, joint: 600000000 });
+    Object.assign(s.spouse, { present: true, name: 'Каримова Дилноза' });
+    s.parents[0].status = 'dead'; s.parents[0].name = 'Каримов Аҳмад';
+    s.parents[1].name = 'Каримова Мунисхон';
+    s.children = [
+      person({ name: 'Каримов Жасур', }),
+      person({ name: 'Каримова Нигора', minor: true }),
+      person({ name: 'Каримов Бобур', status: 'dead', kids: [person({ name: 'Каримов Темур' }), person({ name: 'Каримова Мадина', minor: true })] }),
+    ];
+    s.siblings = [person({ name: 'Каримов Шуҳрат' })];
+    return s;
+  },
+  'Намуна 2: васият ва мажбурий улуш': () => {
+    const s = blank();
+    Object.assign(s.deceased, { name: 'Юсупов Олим', date: '2026-06-01', place: 'Самарқанд ш.' });
+    Object.assign(s.estate, { personal: 400000000, joint: 0 });
+    Object.assign(s.spouse, { present: true, name: 'Юсупова Гулнора', disabled: true });
+    s.parents.forEach((p) => (p.status = 'dead'));
+    s.children = [person({ name: 'Юсупов Азиз', minor: true }), person({ name: 'Юсупов Фаррух' })];
+    s.will = { exists: true, entries: [{ id: uid(), name: 'Раҳимов Санжар (дўсти)', percent: 100, personId: '' }] };
+    return s;
+  },
+  'Намуна 3: иккинчи навбат ва қарамоғидаги шахс': () => {
+    const s = blank();
+    Object.assign(s.deceased, { name: 'Назаров Баҳодир', date: '2026-09-10', place: 'Наманган ш.' });
+    Object.assign(s.estate, { personal: 250000000, joint: 0 });
+    s.parents.forEach((p) => (p.status = 'dead'));
+    s.siblings = [person({ name: 'Назарова Зулфия' }), person({ name: 'Назаров Улуғбек', status: 'dead', kids: [person({ name: 'Назаров Сардор' }), person({ name: 'Назарова Шаҳло' })] }), person({ name: 'Назаров Илҳом', refused: true })];
+    s.grandparents = [person({ name: 'Назарова Ойниса (буви, ота томондан)' })];
+    s.dependents = [person({ name: 'Эргашев Комил', disabled: true, dependent: true, cohabited: true })];
+    return s;
+  },
+};
+
+let S = load() || SAMPLES['Намуна 1: қонун бўйича, тақдим этиш ҳуқуқи']();
+function save() { try { localStorage.setItem('meros-anketa', JSON.stringify(S)); } catch (e) {} }
+function load() { try { const t = localStorage.getItem('meros-anketa'); return t ? JSON.parse(t) : null; } catch (e) { return null; } }
+
+// ---------- DOM ёрдамчилари ----------
+function h(tag, attrs = {}, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else if (k === 'class') el.className = v;
+    else if (v === true) el.setAttribute(k, '');
+    else if (v !== false && v != null) el.setAttribute(k, v);
+  }
+  kids.flat().forEach((c) => c != null && el.append(c.nodeType ? c : document.createTextNode(c)));
+  return el;
+}
+function field(lbl, obj, key, type = 'text', opts = {}) {
+  const inp = h('input', { type, value: obj[key] ?? '', placeholder: opts.ph || '', min: opts.min, max: opts.max, step: opts.step });
+  inp.addEventListener('input', () => { obj[key] = type === 'number' ? (inp.value === '' ? '' : +inp.value) : inp.value; recalc(); });
+  if (opts.rerender) inp.addEventListener('change', renderForm);
+  return h('div', {}, h('label', {}, lbl), inp);
+}
+function check(lbl, obj, key, rerender = false, title = '') {
+  const c = h('input', { type: 'checkbox' }); c.checked = !!obj[key];
+  c.addEventListener('change', () => { obj[key] = c.checked; rerender ? renderForm() : recalc(); });
+  return h('label', { title }, c, lbl);
+}
+function select(lbl, obj, key, options, rerender = true) {
+  const s = h('select', {}, options.map(([v, t]) => { const o = h('option', { value: v }, t); if (String(obj[key] ?? '') === String(v)) o.selected = true; return o; }));
+  s.addEventListener('change', () => { obj[key] = s.value; rerender ? renderForm() : recalc(); });
+  return h('div', {}, h('label', {}, lbl), s);
+}
+const UNWORTHY = [
+  ['', '— асосни танланг —'],
+  ['мерос қолдирувчи ёки бошқа меросхўрнинг ҳаётига қасд қилган', 'Ҳаётга қасд қилган (1119-м. 1-қ.)'],
+  ['васиятнинг амалга оширилишига қасддан тўсқинлик қилган', 'Сўнгги иродага тўсқинлик (1119-м. 2-қ.)'],
+  ['ота-оналик ҳуқуқидан маҳрум қилинган', 'Ота-оналик ҳуқуқидан маҳрум (1119-м.)'],
+  ['мерос қолдирувчини таъминлаш мажбуриятидан бўйин товлаган', 'Таъминлашдан бўйин товлаган (1119-м.)'],
+];
+
+/**
+ * opts: {label, kidsDepth, kidLabel(level), minor, dependentFlag, extra(p), onRemove, degree, level}
+ */
+function personCard(p, opts) {
+  const lvl = opts.level || 0;
+  const dead = p.status === 'dead';
+  const card = h('div', { class: 'person' + (dead ? ' dead' : '') });
+  card.append(h('div', { class: 'top' },
+    field(opts.label + ' — Ф.И.Ш.', p, 'name', 'text', { ph: 'Фамилия, исм, отасининг исми', rerender: true }),
+    select('Ҳолати', p, 'status', [['alive', 'Тирик'], ['dead', 'Вафот этган (мерос очилгунча)']]),
+    opts.onRemove ? h('button', { class: 'x', title: 'Ўчириш', onclick: opts.onRemove }, '✕') : h('span'),
+  ));
+  if (opts.extra) card.append(opts.extra(p));
+  if (!dead) {
+    const fl = h('div', { class: 'flags' });
+    if (opts.minor) fl.append(check('Вояга етмаган', p, 'minor', false, '1142-модда — мажбурий улуш'));
+    fl.append(check('Меҳнатга лаёқатсиз', p, 'disabled', true, 'Ногиронлиги бор ёки пенсия ёшида (1141, 1142-моддалар)'));
+    if (opts.dependentFlag && p.disabled) fl.append(check('Камида 1 йил мерос қолдирувчининг қарамоғида бўлган', p, 'dependent', false, '1141-модда 2-қисми'));
+    fl.append(check('Меросдан воз кечган', p, 'refused', false, '1147-модда'));
+    fl.append(check('Номуносиб меросхўр (суд қарори)', p, 'unworthy', true, '1119-модда'));
+    card.append(fl);
+    if (p.unworthy) card.append(h('div', { class: 'row', style: 'margin-top:8px' }, select('Четлатиш асоси', p, 'unworthyReason', UNWORTHY, false)));
+  } else if (opts.kidsDepth > 0) {
+    const box = h('div', { class: 'kids' }, h('div', { class: 'ttl' }, `Тақдим этиш ҳуқуқи бўйича (1140-м.): ${opts.kidLabel(lvl + 1)}лари`));
+    p.kids = p.kids || [];
+    p.kids.forEach((k, i) => box.append(personCard(k, { ...opts, label: cap(opts.kidLabel(lvl + 1)), kidsDepth: opts.kidsDepth - 1, level: lvl + 1, extra: null, minor: opts.minorKids ?? opts.minor, onRemove: () => { p.kids.splice(i, 1); renderForm(); } })));
+    box.append(h('button', { class: 'add', onclick: () => { p.kids.push(person()); renderForm(); } }, `+ ${opts.kidLabel(lvl + 1)} қўшиш`));
+    card.append(box);
+  }
+  return card;
+}
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+const descN = (l) => ['фарзанд', 'невара', 'чевара', 'эвара'][l] || 'авлод';
+
+function listSection(title, art, hint, arr, opts, addLabel, make = () => person()) {
+  const sec = h('div', { class: 'card' }, h('h2', {}, title, h('span', { class: 'art' }, art)), hint ? h('div', { class: 'hint' }, hint) : null);
+  arr.forEach((p, i) => sec.append(personCard(p, { ...opts, onRemove: () => { arr.splice(i, 1); renderForm(); } })));
+  sec.append(h('button', { class: 'add', onclick: () => { arr.push(make()); renderForm(); } }, addLabel));
+  return sec;
+}
+
+function allNamed() {
+  const out = [];
+  const walk = (p, rel) => { if (p.name) out.push([p.id, `${p.name} (${rel})`]); (p.kids || []).forEach((k) => walk(k, rel + ' авлоди')); };
+  if (S.spouse.present) walk(S.spouse, 'эр/хотин');
+  S.parents.forEach((p) => walk(p, p.role === 'father' ? 'ота' : 'она'));
+  S.children.forEach((p) => walk(p, 'фарзанд'));
+  S.siblings.forEach((p) => walk(p, 'ака-ука/опа-сингил'));
+  S.grandparents.forEach((p) => walk(p, 'бобо/буви'));
+  S.uncles.forEach((p) => walk(p, 'амаки/тоға/амма/хола'));
+  S.others.forEach((p) => walk(p, 'қариндош'));
+  S.dependents.forEach((p) => walk(p, 'қарамоғидаги'));
+  return out;
+}
+
+function renderForm() {
+  const F = document.getElementById('form');
+  F.replaceChildren();
+  // Асбоблар
+  const sampleSel = h('select', { style: 'width:auto' }, h('option', { value: '' }, 'Намуна юклаш…'), Object.keys(SAMPLES).map((k) => h('option', { value: k }, k)));
+  sampleSel.addEventListener('change', () => { if (sampleSel.value) { S = SAMPLES[sampleSel.value](); renderForm(); } });
+  const fileIn = h('input', { type: 'file', accept: '.json,application/json', style: 'display:none' });
+  fileIn.addEventListener('change', async () => { const f = fileIn.files[0]; if (!f) return; try { S = JSON.parse(await f.text()); renderForm(); } catch (e) { alertBox('Файлни ўқиб бўлмади.'); } });
+  F.append(h('div', { class: 'toolbar' },
+    sampleSel,
+    h('button', { onclick: () => { S = blank(); renderForm(); } }, 'Янги анкета'),
+    h('button', { onclick: exportJson }, 'Сақлаш (JSON)'),
+    h('button', { onclick: () => fileIn.click() }, 'Юклаш (JSON)'), fileIn,
+    h('button', { class: 'pri', onclick: () => window.print() }, 'Чоп этиш / PDF'),
+  ));
+
+  // 1. Мерос қолдирувчи
+  F.append(h('div', { class: 'card' },
+    h('h2', {}, '1. Мерос қолдирувчи', h('span', { class: 'art' }, '1116, 1117-моддалар')),
+    h('div', { class: 'row' }, field('Ф.И.Ш.', S.deceased, 'name'), field('Вафот этган (суд вафот этган деб эълон қилган) сана', S.deceased, 'date', 'date')),
+    h('div', { class: 'row' }, field('Мерос очилган жой (охирги доимий яшаш жойи)', S.deceased, 'place')),
+    h('div', { class: 'row' },
+      field('Шахсий мол-мулк қиймати, сўм', S.estate, 'personal', 'number', { min: 0, ph: 'ихтиёрий' }),
+      field('Никоҳда орттирилган умумий мулк қиймати, сўм', S.estate, 'joint', 'number', { min: 0, ph: 'ихтиёрий' })),
+    h('div', { class: 'hint' }, 'Қиймат киритилмаса, улушлар фақат каср ва фоизда кўрсатилади. Умумий мулкнинг ½ қисми тирик эр (хотин)га мулкдор сифатида ажратилади (1114-м.).'),
+  ));
+
+  // 2. Эр (хотин)
+  const sp = h('div', { class: 'card' }, h('h2', {}, '2. Эр (хотин)', h('span', { class: 'art' }, '1135, 1142, 1143-моддалар')));
+  sp.append(h('div', { class: 'flags' }, check('Мерос очилган пайтда эр (хотин) бор эди', S.spouse, 'present', true)));
+  if (S.spouse.present) {
+    sp.append(personCard(S.spouse, { label: 'Эр (хотин)', kidsDepth: 0, extra: (p) => h('div', { class: 'flags' }, check('Никоҳ ФҲДЁ органида қайд этилган', p, 'registered', false, 'Оила кодекси 13-моддаси')) }));
+  }
+  F.append(sp);
+
+  // 3. Ота-она
+  const pr = h('div', { class: 'card' }, h('h2', {}, '3. Ота-она (фарзандликка олганлар)', h('span', { class: 'art' }, '1134, 1135, 1142-моддалар')));
+  S.parents.forEach((p) => pr.append(personCard(p, { label: p.role === 'father' ? 'Ота' : 'Она', kidsDepth: 0,
+    extra: (q) => h('div', { class: 'flags' }, check('Қон-қариндош ота/она, мерос қолдирувчи бошқа шахсга фарзандликка берилган', q, 'bioOfAdopted', false, '1134-модда')) })));
+  F.append(pr);
+
+  // 4. Фарзандлар
+  F.append(listSection('4. Фарзандлар (фарзандликка олинганлар ҳам)', '1135, 1140, 1142-моддалар',
+    'Мерос қолдирувчи ҳаётлигида ҳомила бўлиб, вафотидан кейин тирик туғилган фарзандлар ҳам киритилади (1118-м.). Вафот этган фарзанд учун унинг авлодларини қўшинг.',
+    S.children, { label: 'Фарзанд', kidsDepth: 6, kidLabel: descN, minor: true, minorKids: false }, '+ Фарзанд қўшиш'));
+
+  // 5. Иккинчи навбат
+  F.append(listSection('5. Ака-ука, опа-сингиллар (туғишган ва ўгай)', '1136, 1140-моддалар',
+    'Вафот этган ака-ука/опа-сингил ўрнига унинг фарзандлари (жиянлар) мерос олади.',
+    S.siblings, { label: 'Ака-ука/опа-сингил', kidsDepth: 1, kidLabel: () => 'жиян', dependentFlag: true,
+      extra: (p) => h('div', { class: 'flags' }, check('Ўгай (ота ёки она битта)', p, 'half')) }, '+ Ака-ука/опа-сингил қўшиш'));
+  F.append(listSection('6. Бобо ва бувилар (ота ва она томонидан)', '1136-модда', null,
+    S.grandparents, { label: 'Бобо/буви', kidsDepth: 0, dependentFlag: true }, '+ Бобо/буви қўшиш'));
+
+  // 6. Учинчи навбат
+  F.append(listSection('7. Амаки, тоға, амма, холалар', '1137, 1140-моддалар',
+    'Вафот этганлари ўрнига уларнинг фарзандлари (амакиваччалар, тоғаваччалар ва ҳ.к.) мерос олади.',
+    S.uncles, { label: 'Амаки/тоға/амма/хола', kidsDepth: 1, kidLabel: () => 'амакивачча', dependentFlag: true }, '+ Қўшиш'));
+
+  // 7. Тўртинчи навбат
+  F.append(listSection('8. Бошқа қариндошлар (олтинчи даражагача)', '1138-модда',
+    'Қариндошлик даражаси улар орасидаги туғилишлар сони билан аниқланади: эвара-бобо/буви — 3, жиян-невара, амакиваччалар — 4 ва ҳ.к. Яқинроқ даража устун туради.',
+    S.others, { label: 'Қариндош', kidsDepth: 0, dependentFlag: true,
+      extra: (p) => h('div', { class: 'row', style: 'margin-top:8px' }, select('Қариндошлик даражаси', p, 'degree', [['', '—'], [3, '3-даража'], [4, '4-даража'], [5, '5-даража'], [6, '6-даража']], false)) },
+    '+ Қариндош қўшиш', () => person({ degree: 4 })));
+
+  // 8. Қарамоғидагилар
+  F.append(listSection('9. Меҳнатга лаёқатсиз қарамоғидаги шахслар', '1139, 1141-моддалар',
+    'Мерос қолдирувчининг қариндоши бўлмаган ёки юқоридаги рўйхатларга кирмаган шахслар. 2–4-навбат қариндошлари учун «қарамоғида бўлган» белгисини уларнинг ўз карточкасида қўйинг.',
+    S.dependents, { label: 'Қарамоғидаги шахс', kidsDepth: 0,
+      extra: (p) => h('div', { class: 'flags' },
+        check('Камида 1 йил қарамоғида бўлган', p, 'dependent'),
+        check('Мерос қолдирувчи билан бирга яшаган', p, 'cohabited')) },
+    '+ Қарамоғидаги шахс қўшиш', () => person({ disabled: true })));
+
+  // 9. Васият
+  const w = h('div', { class: 'card' }, h('h2', {}, '10. Васият', h('span', { class: 'art' }, '1120–1133, 1142-моддалар')));
+  w.append(h('div', { class: 'flags' }, check('Васиятнома мавжуд (нотариал тасдиқланган ёки унга тенглаштирилган)', S.will, 'exists', true)));
+  if (S.will.exists) {
+    w.append(h('div', { class: 'hint' }, 'Ҳар бир васият бўйича меросхўр ва унга қолдирилган улушни (мероснинг фоизида) киритинг. Васият қилинмаган қисм қонун бўйича тақсимланади (1123-м.).'));
+    const opts = [['', '— анкетадан ташқари шахс —'], ...allNamed()];
+    S.will.entries.forEach((e, i) => {
+      const linked = !!e.personId;
+      w.append(h('div', { class: 'person' },
+        h('div', { class: 'top' },
+          select('Меросхўр', e, 'personId', opts),
+          field('Улуш, %', e, 'percent', 'number', { min: 0, max: 100, step: 'any' }),
+          h('button', { class: 'x', onclick: () => { S.will.entries.splice(i, 1); renderForm(); } }, '✕')),
+        linked ? null : h('div', { class: 'row', style: 'margin-top:8px' }, field('Ф.И.Ш. (ёки юридик шахс номи)', e, 'name')),
+        linked ? null : h('div', { class: 'flags' }, check('Мерос очилгунга қадар вафот этган', e, 'dead'), check('Воз кечган', e, 'refused'), check('Номуносиб', e, 'unworthy')),
+      ));
+    });
+    w.append(h('button', { class: 'add', onclick: () => { S.will.entries.push({ id: uid(), name: '', percent: S.will.entries.length ? '' : 100, personId: '' }); renderForm(); } }, '+ Васият бўйича меросхўр қўшиш'));
+  }
+  F.append(w);
+  recalc();
+}
+
+function exportJson() {
+  const blob = new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' });
+  const a = h('a', { href: URL.createObjectURL(blob), download: `meros-anketa-${(S.deceased.name || 'ish').replace(/\s+/g, '_')}.json` });
+  document.body.append(a); a.click(); a.remove();
+}
+function alertBox(t) { const r = document.getElementById('result'); r.prepend(h('div', { class: 'note bad' }, t)); }
+
+const pct = (q) => (q.num() * 100).toLocaleString('ru-RU', { maximumFractionDigits: 4 }) + '%';
+const LAWS = [
+  ['1112', 'Ворислик асослари — васият ва қонун бўйича'], ['1113', 'Мерос таркиби'], ['1114', 'Умумий биргаликдаги мулкни мерос қилиб олиш'],
+  ['1116', 'Мероснинг очилиши ва вақти'], ['1117', 'Мерос очилган жой'], ['1118', 'Меросхўрлар'], ['1119', 'Номуносиб меросхўрларни мерос олишдан четлатиш'],
+  ['1120', 'Васият бўйича ворислик'], ['1122', 'Меросхўрни қўшимча тайинлаш'], ['1123', 'Мол-мулкнинг васият қилинмаган қисмини мерос қилиб олиш'],
+  ['1134', 'Қонун бўйича ворислик: умумий қоидалар, фарзандликка олиш'], ['1135', 'Биринчи навбат: фарзандлар, эр (хотин), ота-она'],
+  ['1136', 'Иккинчи навбат: ака-ука, опа-сингиллар, бобо-бувилар'], ['1137', 'Учинчи навбат: амаки, тоға, амма, холалар'],
+  ['1138', 'Тўртинчи навбат: олтинчи даражагача бошқа қариндошлар'], ['1139', 'Бешинчи навбат: меҳнатга лаёқатсиз қарамоғидагилар'],
+  ['1140', 'Тақдим этиш ҳуқуқи бўйича ворислик'], ['1140-1', 'Мерос трансмиссияси'], ['1141', 'Меҳнатга лаёқатсиз қарамоғидаги шахслар'],
+  ['1142', 'Мероснинг мажбурий улушига бўлган ҳуқуқ'], ['1143', 'Эр (хотин)нинг мерос олишдаги ҳуқуқлари'],
+  ['1146', 'Мерос ҳуқуқи тўғрисидаги гувоҳнома (6 ойдан кейин)'], ['1147–1148', 'Меросдан воз кечиш ва унинг чекловлари'],
+  ['1154', 'Мерос улушларининг ўсиши'], ['1157', 'Эгасиз мол-мулк'],
+];
+
+function recalc() {
+  save();
+  const R = document.getElementById('result');
+  let res;
+  try { res = M.compute(S); } catch (e) { R.replaceChildren(h('div', { class: 'card' }, h('div', { class: 'note bad' }, 'Ҳисоблашда хато: ' + e.message))); return; }
+  const qName = { 0: 'Васият бўйича', 1: 'Биринчи навбат', 2: 'Иккинчи навбат', 3: 'Учинчи навбат', 4: 'Тўртинчи навбат', 5: 'Бешинчи навбат' };
+  const card = h('div', { class: 'card' });
+  card.append(h('h2', {}, 'Натижа: меросхўрлар таркиби ва улушлари'));
+  card.append(h('div', { class: 'hint' }, [S.deceased.name || 'Мерос қолдирувчи', S.deceased.date ? `, мерос очилган сана: ${S.deceased.date.split('-').reverse().join('.')}` : '', S.deceased.place ? `, жой: ${S.deceased.place}` : ''].join('')));
+  card.append(h('div', { class: 'summary' },
+    h('div', { class: 'stat' }, h('div', { class: 'v' }, String(res.heirs.length)), h('div', { class: 'k' }, 'меросхўр')),
+    h('div', { class: 'stat' }, h('div', { class: 'v' }, res.baseQueue ? qName[res.baseQueue] : '—'), h('div', { class: 'k' }, 'чақириладиган навбат (қонун бўйича)')),
+    h('div', { class: 'stat' }, h('div', { class: 'v' }, res.estateValue ? M.fmtMoney(res.estateValue) : '—'), h('div', { class: 'k' }, 'мерос массаси')),
+  ));
+  res.warnings.forEach((t) => card.append(h('div', { class: 'note bad' }, t)));
+
+  if (res.heirs.length) {
+    const tb = h('tbody');
+    res.heirs.forEach((x) => tb.append(h('tr', {},
+      h('td', {}, h('b', {}, x.name), h('div', { class: 'basis' }, x.rel), x.obligatory ? h('span', { class: 'tag ob' }, 'мажбурий улушга ҳақли') : null),
+      h('td', { class: 'num' }, h('div', { class: 'frac' }, x.total.toString()), h('div', { class: 'basis' }, pct(x.total)), x.value != null ? h('div', { class: 'basis' }, M.fmtMoney(x.value)) : null),
+      h('td', {}, x.parts.filter((p) => !p.share.isZero()).map((p) => h('div', { class: 'basis' }, `${p.basis}: ${p.share.toString()}`)), x.arts.map((a) => h('span', { class: 'tag' }, a + '-м.'))),
+    )));
+    card.append(h('div', { class: 'tablewrap' }, h('table', {}, h('thead', {}, h('tr', {}, h('th', {}, 'Меросхўр'), h('th', {}, 'Улуш'), h('th', {}, 'Асос ва моддалар'))), tb)));
+    const ok = res.total.cmp(M.Q.of(1)) === 0;
+    card.append(h('div', { class: 'hint', style: 'margin-top:6px' }, ok ? '✓ Улушлар йиғиндиси 1 га (100%) тенг.' : `Улушлар йиғиндиси: ${res.total}`));
+  }
+  if (res.spouseHalf) card.append(h('div', { class: 'note' }, `Эр (хотин)нинг умумий мулкдаги ½ улуши: ${M.fmtMoney(res.spouseHalf)} — мерос таркибига кирмайди (1114, 1143-м.).`));
+  res.notes.filter((t) => !t.startsWith('Эр-хотиннинг')).forEach((t) => card.append(h('div', { class: 'note' }, t)));
+
+  if (res.excluded.length) {
+    card.append(h('h2', { style: 'margin-top:14px' }, 'Мерос олмайдиган шахслар'));
+    card.append(h('ul', { class: 'excl' }, res.excluded.map((e) => h('li', {}, h('b', {}, e.name), ' — ', e.why))));
+  }
+  card.append(h('details', { style: 'margin-top:10px' }, h('summary', {}, 'Қўлланилган ФК моддалари'), h('ul', { class: 'laws' }, LAWS.map(([a, t]) => h('li', {}, h('b', {}, a + '-м. '), t)))));
+  card.append(h('div', { class: 'disclaimer' },
+    'Ҳисоб ФК 1112–1157-моддаларининг амалдаги таҳрири асосида автоматик бажарилади ва ёрдамчи ҳисобланади. Номуносиблик (1119-м.) суд томонидан аниқланади; меросни қабул қилиш, мерос трансмиссияси (1140-1-м.), васиятнинг ҳақиқийлиги (1130-м.), меросдан муайян шахс фойдасига воз кечиш (1148-м.) ва мерос улушларини бўлиш (1150, 1153-м.) алоҳида баҳоланади. Якуний хулосадан олдин lex.uz даги амалдаги матн билан солиштиринг.'));
+  R.replaceChildren(card);
+}
+
+renderForm();
+</script>
+</body>
+</html>
